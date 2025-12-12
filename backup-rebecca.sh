@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DB_HOST="localhost"
+DB_HOST="127.0.0.1"
 DB_NAME="rebecca"
 DB_USER="root"
 DB_PASS="pass"
@@ -27,7 +27,7 @@ FLAG_FILE="/opt/backup/.first_run_done"
 if [ ! -f "$FLAG_FILE" ]; then
   curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
        -d chat_id="${CHAT_ID}" \
-       -d text="🔥 تست موفقیت‌آمیز بود! اسکریپت بکاپ فعال شد و از این به بعد بکاپ‌ها به‌صورت خودکار ارسال می‌شن 😉✨"
+       -d text="🔗!تست موفقیت‌آمیز بود"
   touch "$FLAG_FILE"
 fi
 
@@ -44,7 +44,7 @@ if mysqldump \
   ARCHIVE_PATH="${FILE_PATH}.gz"
 
   if [ -f "$ARCHIVE_PATH" ]; then
-    CAPTION=$'🔥 '"**${DB_NAME}**"$'\n⏰ '"$(date +'%H:%M:%S')"
+    CAPTION=$'🔥 '"**${DB_NAME}**"$'\n⏰ '"$(date +'%H:%M')"
     curl -s -F document=@"$ARCHIVE_PATH" \
          -F chat_id="$CHAT_ID" \
          -F caption="$CAPTION" \
@@ -58,12 +58,11 @@ if mysqldump \
     cd / || exit 1
     zip -r "$CONFIG_ARCHIVE_PATH" \
       opt/rebecca/.env \
-      opt/rebecca/docker-compose.yml \
-      var/lib/rebecca/xray_config.json
+      opt/rebecca/docker-compose.yml
   )
 
   if [ -f "$CONFIG_ARCHIVE_PATH" ]; then
-    CAPTION_FILES=$'🗂 بکاپ فایل‌های rebecca\n⏰ '"$(date +'%H:%M:%S')"
+    CAPTION_FILES=$'🗂 بکاپ فایل‌های rebecca\n⏰ '"$(date +'%H:%M')"
     curl -s -F document=@"$CONFIG_ARCHIVE_PATH" \
          -F chat_id="$CHAT_ID" \
          -F caption="$CAPTION_FILES" \
